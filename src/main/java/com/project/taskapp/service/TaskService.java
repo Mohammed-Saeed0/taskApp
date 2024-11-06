@@ -1,22 +1,24 @@
 package com.project.taskapp.service;
 
 import com.project.taskapp.dto.TaskDTO;
+import com.project.taskapp.exception.TaskNotFoundException;
 import com.project.taskapp.mapper.TaskMapper;
 import com.project.taskapp.repository.TaskRepository;
 import com.project.taskapp.entity.Task;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    @Autowired
     private TaskMapper taskMapper;
+
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+        this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
+    }
 
 
     // Retrieve all tasks
@@ -30,7 +32,7 @@ public class TaskService {
     // Retrieve a task by id
     public TaskDTO getTaskById(Integer id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
         return taskMapper.toTaskDTO(task);
     }
 
@@ -44,7 +46,7 @@ public class TaskService {
     // Update a task by id
     public TaskDTO updateTask(Integer id, TaskDTO taskDTO) {
         Task existingTask = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
         existingTask.setTitle(taskDTO.getTitle());
         existingTask.setDescription(taskDTO.getDescription());
         existingTask.setStatus(taskDTO.getStatus());

@@ -1,16 +1,18 @@
 package com.project.taskapp.controller;
 import com.project.taskapp.dto.TaskDTO;
-import com.project.taskapp.entity.Task;
 import com.project.taskapp.service.TaskService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")
 @AllArgsConstructor
+@Validated
 public class TaskController {
     private final TaskService taskService;
 
@@ -28,14 +30,14 @@ public class TaskController {
 
     // create a new task
     @PostMapping
-    public String createTask(@RequestBody TaskDTO taskDTO) {
+    public String createTask(@RequestBody @Valid TaskDTO taskDTO) {
         taskService.createTask(taskDTO);
         return "task is created successfully";
     }
 
     // update a task
     @PutMapping("/{id}")
-    public String updateTask(@PathVariable Integer id, @RequestBody TaskDTO taskDTO) {
+    public String updateTask(@PathVariable Integer id, @RequestBody @Valid TaskDTO taskDTO) {
         taskService.updateTask(id, taskDTO);
         return "task is updated successfully";
     }
