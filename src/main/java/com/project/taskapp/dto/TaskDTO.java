@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 @Data
 public class TaskDTO {
-    private Integer id;
+    private Long id;
 
     @NotNull(message = "Title cannot be null")
     @Size(min = 3, max = 50, message = "Title must be between 3 and 50 characters")

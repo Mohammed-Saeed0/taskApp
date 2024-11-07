@@ -1,10 +1,12 @@
 package com.project.taskapp.service;
 
 import com.project.taskapp.dto.TaskDTO;
+import com.project.taskapp.dto.TaskSearch;
 import com.project.taskapp.exception.TaskNotFoundException;
 import com.project.taskapp.mapper.TaskMapper;
 import com.project.taskapp.repository.TaskRepository;
 import com.project.taskapp.entity.Task;
+import com.project.taskapp.repository.TaskSpecification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class TaskService {
     }
 
     // Retrieve a task by id
-    public TaskDTO getTaskById(Integer id) {
+    public TaskDTO getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
         return taskMapper.toTaskDTO(task);
@@ -44,7 +46,7 @@ public class TaskService {
     }
 
     // Update a task by id
-    public TaskDTO updateTask(Integer id, TaskDTO taskDTO) {
+    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
         existingTask.setTitle(taskDTO.getTitle());
@@ -56,7 +58,17 @@ public class TaskService {
     }
 
     // Delete a task by id
-    public void deleteTask(Integer id) {
+    public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
+
+
+    // Using Specification to find task by taskTitle
+    public List<Task> findByTaskTitle(TaskSearch taskSearch)
+    {
+        TaskSpecification taskSpecification = new TaskSpecification(taskSearch);
+        return taskRepository.findAll(taskSpecification);
+    }
+
+
 }

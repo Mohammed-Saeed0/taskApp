@@ -1,10 +1,10 @@
 package com.project.taskapp.controller;
 import com.project.taskapp.dto.TaskDTO;
+import com.project.taskapp.dto.TaskSearch;
 import com.project.taskapp.service.TaskService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -24,7 +24,7 @@ public class TaskController {
 
     // retrieve a task by id
     @GetMapping("/{id}")
-    public TaskDTO getTaskById(@PathVariable Integer id) {
+    public TaskDTO getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
@@ -37,16 +37,23 @@ public class TaskController {
 
     // update a task
     @PutMapping("/{id}")
-    public String updateTask(@PathVariable Integer id, @RequestBody @Valid TaskDTO taskDTO) {
+    public String updateTask(@PathVariable Long id, @RequestBody @Valid TaskDTO taskDTO) {
         taskService.updateTask(id, taskDTO);
         return "task is updated successfully";
     }
 
     // delete a task
     @DeleteMapping("/{id}")
-    public String deleteTask(@PathVariable Integer id) {
+    public String deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return "task is deleted successfully";
+    }
+
+    // Using Specification to find task by taskTitle
+    @PostMapping("/specification")
+    public ResponseEntity<?> findByTaskTitle(@RequestBody TaskSearch taskSearch)
+    {
+        return ResponseEntity.ok(taskService.findByTaskTitle(taskSearch));
     }
 }
 
