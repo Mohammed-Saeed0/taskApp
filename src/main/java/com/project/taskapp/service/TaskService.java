@@ -6,7 +6,8 @@ import com.project.taskapp.exception.TaskNotFoundException;
 import com.project.taskapp.mapper.TaskMapper;
 import com.project.taskapp.repository.TaskRepository;
 import com.project.taskapp.entity.Task;
-import com.project.taskapp.repository.TaskSpecification;
+import com.project.taskapp.specification.TaskSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class TaskService {
     // Retrieve a task by id
     public TaskDTO getTaskById(Long id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task with sss id " + id + " not found"));
         return taskMapper.toTaskDTO(task);
     }
 
@@ -64,9 +65,9 @@ public class TaskService {
 
 
     // Using Specification to find task by taskTitle
-    public List<Task> findByTaskTitle(TaskSearch taskSearch)
+    public List<Task> getFilteredTasks(String title, String description, String status)
     {
-        TaskSpecification taskSpecification = new TaskSpecification(taskSearch);
+        Specification<Task> taskSpecification = TaskSpecification.getTasks(title,description,status);
         return taskRepository.findAll(taskSpecification);
     }
 

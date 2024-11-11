@@ -50,10 +50,12 @@ public class TaskController {
     }
 
     // Using Specification to find task by taskTitle
-    @PostMapping("/specification")
-    public ResponseEntity<?> findByTaskTitle(@RequestBody TaskSearch taskSearch)
+    @GetMapping("/specification")
+    public ResponseEntity<?> getFilteredTasks(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "status", required = false) String status)
     {
-        return ResponseEntity.ok(taskService.findByTaskTitle(taskSearch));
+        return ResponseEntity.ok(taskService.getFilteredTasks(title, description, status));
     }
 }
-
